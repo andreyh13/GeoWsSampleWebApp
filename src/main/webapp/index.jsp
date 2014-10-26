@@ -44,16 +44,58 @@
 					<li>
 						<a href="directionssimple.jsp" title="">Directions sample</a>
 					</li>
+					<li>
+						<a href="directionsbicycle.jsp" title="">Directions bicycle mode avoiding highways</a>
+					</li>
+					<li>
+						<a href="directionstransit.jsp" title="">Directions transit mode</a>
+					</li>
+					<li>
+						<a href="directionswaypoints.jsp" title="">Directions waypoints</a>
+					</li>
+					<li>
+						<a href="directionswaypointsnostopover.jsp" title="">Directions waypoints no stopover</a>
+					</li>
+					<li>
+						<a href="directionswaypointsoptimize.jsp" title="">Directions waypoints optimization</a>
+					</li>
+					<li>
+						<a href="directionsregion.jsp" title="">Directions region biasing</a>
+					</li>
 				</ul>
 			</li>
 			<li>
 				<h3>Distance Matrix API</h3>
+				<ul>
+					<li>
+						<a href="distancematrix.jsp" title="">Distance Matrix</a>
+					</li>
+				</ul>	
 			</li>
 			<li>
 				<h3>Elevation API</h3>
+				<ul>
+					<li>
+						<a href="elevationbypoint.jsp" title="">Elevation by point</a>
+					</li>
+					<li>
+						<a href="elevationbypoints.jsp" title="">Elevation by points</a>
+					</li>
+					<li>
+						<a href="elevationbypath.jsp" title="">Elevation by path</a>
+					</li>
+					<li>
+						<a href="elevationbypathpoly.jsp" title="">Elevation by path with encoded polyline</a>
+					</li>
+				</ul>
 			</li>
 			<li>
 				<h3>Timezone API</h3>
+				<ul>
+					<li>
+						<a href="timezone.jsp" title="">Time Zone</a>
+					</li>
+				</ul>
 			</li>
 		</ul>
 	</section>

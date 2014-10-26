@@ -6,6 +6,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Geocode components filtering</title>
+	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </head>
 <body>
 	<header>
@@ -25,7 +26,7 @@
 	<code>
 		<%= source %>
 		<br/>
-		<pre>
+		<pre class="prettyprint">
 		String output = "";
 		String address = "Torun";
 		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,

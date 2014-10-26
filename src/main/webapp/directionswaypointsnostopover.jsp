@@ -5,19 +5,19 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Directions sample</title>
+	<title>Directions way points no stopping</title>
 	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </head>
 <body>
 	<header>
-		<h1>Directions sample</h1>
+		<h1>Directions way points no stopping</h1>
 	</header>
 	<a href="index.jsp" title="Go back">&lt; Go back</a>
 <%  GeoWsSamples s = new GeoWsSamples();
-	String source = GeoWsSamples.showMethod(s, "sampleDirections");
-	String result = s.sampleDirections();
+	String source = GeoWsSamples.showMethod(s, "sampleDirectionsWaypointsNoStopover");
+	String result = s.sampleDirectionsWaypointsNoStopover();
 %>	
-	<p>In this example we search directions from Toronto to Montreal with default settings</p>
+	<p>In this example we search directions for a route between Boston, MA and Concord, MA with stopover in Charlestown and no stopover in Lexington</p>
 	
 	<p>
 		Source code:
@@ -31,7 +31,10 @@
 		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,
                 CRYPTO_KEY).setQueryRateLimit(QPS);
 		try {
-			DirectionsRoute[] routes = DirectionsApi.getDirections(context, "Toronto", "Montreal").await();
+			DirectionsApiRequest req = DirectionsApi.newRequest(context); 
+			DirectionsRoute[] routes = req.origin("Boston,MA").destination("Concord,MA")
+					.mode(TravelMode.DRIVING)
+					.waypoints("Charlestown,MA","via:Lexington,MA").await();
 			output += this.printDirectionsRoutes(routes);
 		} catch(ApiException e){
 			output += this.printError(e);

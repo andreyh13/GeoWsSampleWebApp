@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.google.maps.model.*;
 import com.google.maps.*;
+import com.google.maps.DirectionsApi.RouteRestriction;
 
 public class GeoWsSamples {
 
@@ -500,5 +501,299 @@ public class GeoWsSamples {
 		output += "</dl>";
 		return output;
 	}
-
+	
+	public String sampleDirectionsBicycle(){
+		String output = "";
+		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,
+                CRYPTO_KEY).setQueryRateLimit(QPS);
+		try {
+			DirectionsApiRequest req = DirectionsApi.newRequest(context); 
+			DirectionsRoute[] routes = req.origin("Toronto").destination("Montreal")
+					.mode(TravelMode.BICYCLING).avoid(RouteRestriction.HIGHWAYS).await();
+			output += this.printDirectionsRoutes(routes);
+		} catch(ApiException e){
+			output += this.printError(e);
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+		}	
+		return output;
+	}
+	
+	public String sampleDirectionsTransit(){
+		String output = "";
+		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,
+                CRYPTO_KEY).setQueryRateLimit(QPS);
+		try {
+			DirectionsApiRequest req = DirectionsApi.newRequest(context); 
+			DirectionsRoute[] routes = req.origin("Brooklyn").destination("Queens")
+					.mode(TravelMode.TRANSIT)
+					.departureTime(org.joda.time.DateTime.now().plusMinutes(5)).await();
+			output += this.printDirectionsRoutes(routes);
+		} catch(ApiException e){
+			output += this.printError(e);
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+		}	
+		return output;
+	}
+	
+	public String sampleDirectionsWaypoints(){
+		String output = "";
+		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,
+                CRYPTO_KEY).setQueryRateLimit(QPS);
+		try {
+			DirectionsApiRequest req = DirectionsApi.newRequest(context); 
+			DirectionsRoute[] routes = req.origin("Boston,MA").destination("Concord,MA")
+					.mode(TravelMode.DRIVING)
+					.waypoints("Charlestown,MA","Lexington,MA").await();
+			output += this.printDirectionsRoutes(routes);
+		} catch(ApiException e){
+			output += this.printError(e);
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+		}	
+		return output;
+	}
+	
+	public String sampleDirectionsWaypointsNoStopover(){
+		String output = "";
+		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,
+                CRYPTO_KEY).setQueryRateLimit(QPS);
+		try {
+			DirectionsApiRequest req = DirectionsApi.newRequest(context); 
+			DirectionsRoute[] routes = req.origin("Boston,MA").destination("Concord,MA")
+					.mode(TravelMode.DRIVING)
+					.waypoints("Charlestown,MA","via:Lexington,MA").await();
+			output += this.printDirectionsRoutes(routes);
+		} catch(ApiException e){
+			output += this.printError(e);
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+		}	
+		return output;
+	}
+	
+	public String sampleDirectionsWaypointsOptimize(){
+		String output = "";
+		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,
+                CRYPTO_KEY).setQueryRateLimit(QPS);
+		try {
+			DirectionsApiRequest req = DirectionsApi.newRequest(context); 
+			DirectionsRoute[] routes = req.origin("Adelaide,SA").destination("Adelaide,SA")
+					.mode(TravelMode.DRIVING)
+					.optimizeWaypoints(true)
+					.waypoints("Barossa Valley,SA","Clare,SA","Connawarra,SA","McLaren Vale,SA")
+					.await();
+			output += this.printDirectionsRoutes(routes);
+		} catch(ApiException e){
+			output += this.printError(e);
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+		}	
+		return output;
+	}
+	
+	public String sampleDirectionsRegion(){
+		String output = "";
+		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,
+                CRYPTO_KEY).setQueryRateLimit(QPS);
+		try {
+			DirectionsApiRequest req = DirectionsApi.newRequest(context); 
+			DirectionsRoute[] routes = req.origin("Toledo").destination("Madrid")
+					.mode(TravelMode.DRIVING)
+					.region("es")
+					.await();
+			output += this.printDirectionsRoutes(routes);
+		} catch(ApiException e){
+			output += this.printError(e);
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+		}	
+		return output;
+	}
+	
+	public String sampleDistanceMatrix(){
+		String output = "";
+		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,
+                CRYPTO_KEY).setQueryRateLimit(QPS);
+		try {
+			DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(context); 
+			DistanceMatrix trix = req.origins("Vancouver BC","Seattle")
+					.destinations("San Francisco","Victoria BC")
+					.mode(TravelMode.DRIVING)
+					.avoid(RouteRestriction.HIGHWAYS)
+					.language("fr-FR")
+					.await();
+			output += this.printDistanceMatrix(trix);
+		} catch(ApiException e){
+			output += this.printError(e);
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+		}	
+		return output;
+	}
+	
+	private String printDistanceMatrix(DistanceMatrix trix){
+		String output = "<dl>";
+		output += "<dt>Origin addresses</dt><dd>";
+		if(trix.originAddresses!=null && trix.originAddresses.length>0){
+			String oa = "";
+			for(String a : trix.originAddresses){
+				oa += (oa.equals("")?"":", ")+a; 
+			}
+			output += oa;
+		}
+		output += "</dd>";
+		output += "<dt>Destination addresses</dt><dd>";
+		if(trix.destinationAddresses!=null && trix.destinationAddresses.length>0){
+			String da = "";
+			for(String a : trix.destinationAddresses){
+				da += (da.equals("")?"":", ")+a; 
+			}
+			output += da;
+		}
+		output += "</dd>";
+		output += "<dt>Rows</dt><dd>"+this.printDistanceMatrixRows(trix.rows)+"</dd>";
+		output += "</dl>";
+		
+		return output;
+	}
+	
+	private String printDistanceMatrixRows(DistanceMatrixRow[] rows){
+		String output = "";
+		if(rows!=null && rows.length>0){
+			output += "<ul class='distance-matrix-rows'>";
+			for(DistanceMatrixRow r : rows){
+				output += "<li>" + this.printDistanceMatrixRows(r)+"</li>";
+			}
+			output += "</ul>";
+		}
+		return output;
+	}
+	
+	private String printDistanceMatrixRows(DistanceMatrixRow r){
+		String output = "";
+		if(r.elements!=null && r.elements.length>0){
+			output += "<ul class='distance-matrix-elements'>";
+			for(DistanceMatrixElement e : r.elements){
+				output += "<li>"+this.printDistanceMatrixElement(e)+"</li>";
+			}
+			output += "</ul>";
+		}
+		return output;
+	}
+	
+	private String printDistanceMatrixElement(DistanceMatrixElement e){
+		String output = "<dl>";
+		output += "<dt>Distance</dt><dd>"+this.printDistance(e.distance)+"</dd>";
+		output += "<dt>Duration</dt><dd>"+this.printDuration(e.duration)+"</dd>";
+		output += "<dt>Status</dt><dd>"+e.status+"</dd>";
+		output += "</dl>";
+		return output;
+	}
+	
+	public String sampleElevationByPoint(){
+		String output = "";
+		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,
+                CRYPTO_KEY).setQueryRateLimit(QPS);
+		try {
+			ElevationResult res = ElevationApi.getByPoint(context, new LatLng(39.7391536,-104.9847034))
+					.await();
+			output += this.printElevationResult(res);
+		} catch(ApiException e){
+			output += this.printError(e);
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+		}	
+		return output;
+	}
+	
+	public String sampleElevationByPoints(){
+		String output = "";
+		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,
+                CRYPTO_KEY).setQueryRateLimit(QPS);
+		try {
+			ElevationResult[] res = ElevationApi.getByPoints(context, 
+					new LatLng(39.7391536,-104.9847034), new LatLng(36.455556,-116.866667))
+					.await();
+			output += this.printElevationResults(res);
+		} catch(ApiException e){
+			output += this.printError(e);
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+		}	
+		return output;
+	}
+	
+	public String sampleElevationByPath(){
+		String output = "";
+		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,
+                CRYPTO_KEY).setQueryRateLimit(QPS);
+		try {
+			ElevationResult[] res = ElevationApi.getByPath(context, 3,  
+					new LatLng(36.578581,-118.291994), new LatLng(36.455556,-116.866667))
+					.await();
+			output += this.printElevationResults(res);
+		} catch(ApiException e){
+			output += this.printError(e);
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+		}	
+		return output;
+	}
+	
+	public String sampleElevationByPolyline(){
+		String output = "";
+		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,
+                CRYPTO_KEY).setQueryRateLimit(QPS);
+		try {
+			ElevationResult[] res = ElevationApi.getByPath(context, 3,  
+					new EncodedPolyline("gfo}EtohhUxD@bAxJmGF"))
+					.await();
+			output += this.printElevationResults(res);
+		} catch(ApiException e){
+			output += this.printError(e);
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+		}	
+		return output;
+	}
+	
+	private String printElevationResults(ElevationResult[] res){
+		String output = "";
+		if(res!=null && res.length>0){
+			output += "<ul class='elevation-results'>";
+			for(ElevationResult r : res){
+				output += "<li>"+this.printElevationResult(r)+"<li>";
+			}
+			output += "<ul>";
+		}
+		return output;
+	}
+	
+	private String printElevationResult(ElevationResult r){
+		String output = "<dl>";
+		output += "<dt>Location</dt><dd>"+this.printLocation(r.location)+"</dd>";
+		output += "<dt>Elevation</dt><dd>"+r.elevation+"</dd>";
+		output += "<dt>Resolution</dt><dd>"+r.resolution+"</dd>";
+		output += "</dl>";
+		return output;
+	}
+	
+	public String sampleTimezone(){
+		String output = "";
+		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,
+                CRYPTO_KEY).setQueryRateLimit(QPS);
+		try {
+			java.util.TimeZone res = TimeZoneApi.getTimeZone(context,  
+					new LatLng(39.6034810,-119.6822510))
+					.await();
+			output += res.toString();
+		} catch(ApiException e){
+			output += this.printError(e);
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+		}	
+		return output;
+	}
 }

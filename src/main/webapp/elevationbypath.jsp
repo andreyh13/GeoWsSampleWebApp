@@ -5,19 +5,19 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Directions sample</title>
+	<title>Elevation by path</title>
 	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </head>
 <body>
 	<header>
-		<h1>Directions sample</h1>
+		<h1>Elevation by path</h1>
 	</header>
 	<a href="index.jsp" title="Go back">&lt; Go back</a>
 <%  GeoWsSamples s = new GeoWsSamples();
-	String source = GeoWsSamples.showMethod(s, "sampleDirections");
-	String result = s.sampleDirections();
+	String source = GeoWsSamples.showMethod(s, "sampleElevationByPath");
+	String result = s.sampleElevationByPath();
 %>	
-	<p>In this example we search directions from Toronto to Montreal with default settings</p>
+	<p>In this example we search elevation for path between 39.7391536,-104.9847034 and 36.455556,-116.866667</p>
 	
 	<p>
 		Source code:
@@ -31,8 +31,10 @@
 		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,
                 CRYPTO_KEY).setQueryRateLimit(QPS);
 		try {
-			DirectionsRoute[] routes = DirectionsApi.getDirections(context, "Toronto", "Montreal").await();
-			output += this.printDirectionsRoutes(routes);
+			ElevationResult[] res = ElevationApi.getByPath(context, 3,  
+					new LatLng(36.578581,-118.291994), new LatLng(36.455556,-116.866667))
+					.await();
+			output += this.printElevationResults(res);
 		} catch(ApiException e){
 			output += this.printError(e);
 		} catch(Exception e){

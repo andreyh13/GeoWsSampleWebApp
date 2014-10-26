@@ -5,19 +5,19 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Directions sample</title>
+	<title>Directions with region biasing</title>
 	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </head>
 <body>
 	<header>
-		<h1>Directions sample</h1>
+		<h1>Directions with region biasing</h1>
 	</header>
 	<a href="index.jsp" title="Go back">&lt; Go back</a>
 <%  GeoWsSamples s = new GeoWsSamples();
-	String source = GeoWsSamples.showMethod(s, "sampleDirections");
-	String result = s.sampleDirections();
+	String source = GeoWsSamples.showMethod(s, "sampleDirectionsRegion");
+	String result = s.sampleDirectionsRegion();
 %>	
-	<p>In this example we search directions from Toronto to Montreal with default settings</p>
+	<p>In this example we search directions from "Toldeo" to "Madrid" when region is set to es as "Toledo" is interpreted as the Spanish city</p>
 	
 	<p>
 		Source code:
@@ -31,7 +31,11 @@
 		GeoApiContext context = new GeoApiContext().setEnterpriseCredentials(CLIENT_ID,
                 CRYPTO_KEY).setQueryRateLimit(QPS);
 		try {
-			DirectionsRoute[] routes = DirectionsApi.getDirections(context, "Toronto", "Montreal").await();
+			DirectionsApiRequest req = DirectionsApi.newRequest(context); 
+			DirectionsRoute[] routes = req.origin("Toledo").destination("Madrid")
+					.mode(TravelMode.DRIVING)
+					.region("es")
+					.await();
 			output += this.printDirectionsRoutes(routes);
 		} catch(ApiException e){
 			output += this.printError(e);

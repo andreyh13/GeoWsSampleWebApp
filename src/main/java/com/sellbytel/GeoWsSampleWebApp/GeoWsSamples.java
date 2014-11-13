@@ -11,8 +11,8 @@ import com.google.maps.DirectionsApi.RouteRestriction;
 
 public class GeoWsSamples {
 
-	private static String CLIENT_ID = "gme-addictive";
-	private static String CRYPTO_KEY = "Ub9OeP0S9B13G-lnfrrO7PP3-Mo=";
+	private static String CLIENT_ID = "PUT_YOUR_CLIENTID_HERE";
+	private static String CRYPTO_KEY = "PUT_YOUR_CKEY_HERE";
 	
 	private static int QPS = 10;
 	
